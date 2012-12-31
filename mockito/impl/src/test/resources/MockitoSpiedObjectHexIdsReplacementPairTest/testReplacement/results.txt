@@ -1,0 +1,42 @@
+---- Default ----
+$$EnhancerByMockitoWithCGLIB$$123AAff ->
+$$MockitoSpiedObject$$
+
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner$$EnhancerByMockitoWithCGLIB$$1c380094#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method() ->
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner$$MockitoSpiedObject$$#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method()
+
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts. ->
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts.
+
+
+
+---- Custom Translator ----
+$$EnhancerByMockitoWithCGLIB$$123AAff ->
+|REPLACED|
+
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner$$EnhancerByMockitoWithCGLIB$$1c380094#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method() ->
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner|REPLACED|#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method()
+
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts. ->
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts.
+
+
+
+---- Custom Translator Constructor ----
+$$EnhancerByMockitoWithCGLIB$$123AAff ->
+|REPLACED BY CUSTOM TRANSLATOR|
+
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner$$EnhancerByMockitoWithCGLIB$$1c380094#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method() ->
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest$Inner|REPLACED BY CUSTOM TRANSLATOR|#1.method()
+com.sunsprinter.diffunit.mockito.translators.MockitoSpiedObjectHexIdsReplacementPairTest.method()
+
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts. ->
+There are other considerations, but without seeing the sample datafile and your anticipated search pattern, it is hard to give any more thoughts.
+
+
+
