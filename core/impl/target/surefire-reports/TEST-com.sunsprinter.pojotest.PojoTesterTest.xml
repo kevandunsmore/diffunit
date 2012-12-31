@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.049" errors="0" skipped="0" tests="2" name="com.sunsprinter.pojotest.PojoTesterTest">
+<testsuite failures="0" time="0.046" errors="0" skipped="0" tests="2" name="com.sunsprinter.pojotest.PojoTesterTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_07.jdk/Contents/Home/jre/lib"/>
@@ -43,7 +43,7 @@
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk1.7.0_07.jdk/Contents/Home/jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher install"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
@@ -61,6 +61,6 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.003" classname="com.sunsprinter.pojotest.PojoTesterTest" name="testNothing"/>
+  <testcase time="0.002" classname="com.sunsprinter.pojotest.PojoTesterTest" name="testNothing"/>
   <testcase time="0" classname="com.sunsprinter.pojotest.PojoTesterTest" name="testStandardPublicProperties"/>
 </testsuite>
