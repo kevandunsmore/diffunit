@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,28 @@ package com.sunsprinter.diffunit.core.translators;
 
 
 /**
- * IRegExReplacementTranslator
+ * A special translator that will use regular expressions in the translated form of an object and further modify the
+ * string form.  Regular expressions, and the values to use instead of the matched text, must be supplied in the form of
+ * {@link com.sunsprinter.diffunit.core.translators.IRegExReplacementPair} instances.<p/>
+ *
+ * This form of translator is useful if it is not easy to generate a reproducible string form for an object.  For
+ * example, if your string form has a date in it, and it's not easy to set the date (you may not have access to do so),
+ * you can use this type of translator to snip out the date text from the generated string.<p/>
+ *
+ * Instances of this translator will process each {@link com.sunsprinter.diffunit.core.translators.IRegExReplacementPair}
+ * in the order added.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/14
  */
 public interface IRegExReplacementTranslator<T> extends ITranslator<T>
 {
+    /**
+     * Adds another regexp replacement pair to this translator.
+     *
+     * @param replacementPair The replacement pair to add.  May not be null.
+     *
+     * @return this translator, to aid chaining of calls.
+     */
     IRegExReplacementTranslator<T> add(IRegExReplacementPair... replacementPair);
 }

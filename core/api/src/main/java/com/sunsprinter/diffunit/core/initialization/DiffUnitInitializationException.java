@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package com.sunsprinter.diffunit.core.initialization;
 
 
 /**
- * DiffUnitInitializationException
+ * Exception thrown by DiffUnit if there's a problem initializing.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
@@ -28,11 +28,5 @@ public class DiffUnitInitializationException extends Exception
     public DiffUnitInitializationException(final String message)
     {
         super(message);
-    }
-
-
-    public DiffUnitInitializationException(final String message, final Throwable cause)
-    {
-        super(message, cause);
     }
 }

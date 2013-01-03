@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,13 +18,20 @@ package com.sunsprinter.diffunit.core.comparison;
 
 
 /**
- * InputLocationType
+ * Allowable input file location types.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public enum InputLocationType
 {
+    /**
+     * Input files should be sought in the classpath.
+     */
     CLASSPATH,
+
+    /**
+     * Input files should be sought on the file system.
+     */
     FILE_SYSTEM
 }

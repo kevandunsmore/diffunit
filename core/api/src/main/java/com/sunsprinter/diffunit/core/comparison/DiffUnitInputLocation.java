@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,26 @@ import java.lang.annotation.Target;
 
 
 /**
- * DiffUnitOutputLocation
+ * Instructs DiffUnit on where to find known-good versions of files.  Known-good versions of files may be held on the
+ * local file system or on the classpath.<p/>
+ *
+ * Here are some examples.  We assume that the test class is called {@code MyTest} and the method being executed is
+ * called {@code testSomething}.<p/>
+ *
+ * <pre>
+ * // Input files to be found on the classpath under location /MyTest/testSomething
+ * {@code @DiffUnitInputLocation}
+ *
+ * // Input files to be found on the classpath under location /myLocation
+ * {@code @DiffUnitInputLocation(location = "/myLocation"}
+ * {@code @DiffUnitInputLocation(ocationType = InputLocationType.CLASSPATH, location = "/myLocation"}
+ *
+ * // Input files to be found on the file system under location /MyTest/testSomething
+ * {@code @DiffUnitInputLocation(locationType = InputLocationType.FILE_SYSTEM}
+ *
+ * // Input files to be found on the file system under location /wibble/giblets
+ * {@code @DiffUnitInputLocation(locationType = InputLocationType.FILE_SYSTEM, location = "/wibble/giblets"}
+ * </pre>
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
@@ -33,6 +52,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface DiffUnitInputLocation
 {
+    /**
+     * The type of location to seek input files.  Default is {@link com.sunsprinter.diffunit.core.comparison.InputLocationType#CLASSPATH}.
+     */
     InputLocationType locationType() default InputLocationType.CLASSPATH;
+
+    /**
+     * The location of the input files.  Default is /TestClassSimpleName/TestMethodName.
+     */
     String location();
 }

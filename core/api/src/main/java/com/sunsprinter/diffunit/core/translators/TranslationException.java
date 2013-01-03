@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,16 +18,25 @@ package com.sunsprinter.diffunit.core.translators;
 
 
 /**
- * TranslationException
+ * Exception thrown when there's a problem translating an object to string form.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/10
  */
 public class TranslationException extends RuntimeException
 {
+    /**
+     * The object being translated that failed the process.
+     */
     private final Object _failedObject;
 
 
+    /**
+     * Constructs a new exception.
+     *
+     * @param failedObject The object that failed the translation process.  May not be null.
+     * @param message      A descriptive message.  May not be null.
+     */
     public TranslationException(final Object failedObject, final String message)
     {
         super(message);
@@ -35,6 +44,13 @@ public class TranslationException extends RuntimeException
     }
 
 
+    /**
+     * Constructs a new exception.
+     *
+     * @param failedObject The object that failed the translation process.  May not be null.
+     * @param message      A descriptive message.  May not be null.
+     * @param cause        The underlying cause of this exception.
+     */
     public TranslationException(final Object failedObject, final String message, final Throwable cause)
     {
         super(message, cause);
@@ -42,6 +58,11 @@ public class TranslationException extends RuntimeException
     }
 
 
+    /**
+     * Returns the object that caused the translation process to fail.
+     *
+     * @return the object that caused the translation process to fail.  Will never be null.
+     */
     public Object getFailedObject()
     {
         return _failedObject;

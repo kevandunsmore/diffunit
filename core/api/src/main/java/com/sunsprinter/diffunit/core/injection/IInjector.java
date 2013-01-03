@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,12 +18,19 @@ package com.sunsprinter.diffunit.core.injection;
 
 
 /**
- * IInjector
+ * Defines the contract of the thing responsible for injecting values into a test.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public interface IInjector
 {
+    /**
+     * Injects all test collaborators requested by the supplied test.
+     *
+     * @param test The test into which collaborators should be injected.  May not be null.
+     *
+     * @throws DiffUnitInjectionException If there's a problem during the injection process.
+     */
     void inject(final Object test) throws DiffUnitInjectionException;
 }

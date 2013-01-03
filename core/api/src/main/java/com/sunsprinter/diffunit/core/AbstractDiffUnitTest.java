@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,26 +33,43 @@ import com.sunsprinter.diffunit.core.translators.TranslationException;
 
 
 /**
- * AbstractDiffUnitTest
+ * Forms an abstract base class for unit tests.  You can do all of this yourself in your own test by requesting
+ * injection of the {@link com.sunsprinter.diffunit.core.context.ITestingContext} instance but this class provides some
+ * handy shortcuts to avoid tedious typing.  Use it if you don't have an existing superclass in your test.<p/>
+ *
+ * This class requests injection of the {@link com.sunsprinter.diffunit.core.context.ITestingContext} and allows access
+ * to it via the {@link #getTestingContext()} method.  It implements all of the main interface contracts, however,
+ * including {@link com.sunsprinter.diffunit.core.context.ITestingContext} itself, so it's unlikely you'll even need to
+ * touch the testing context.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/15
  */
 public class AbstractDiffUnitTest implements ITestingContext, IRootTranslator, IOutputManager
 {
-     /**
+    /**
      * The DiffUnit translator object, injected by DiffUnit.
      */
     @DiffUnitInject
     private ITestingContext _testingContext;
 
 
+    /**
+     * Returns the testing context instance.  You can use this but can also use {@code this} in its place, as this class
+     * implements the {@link com.sunsprinter.diffunit.core.context.ITestingContext} interface.
+     *
+     * @return The testing context instance.  Will never be null.
+     */
     protected ITestingContext getTestingContext()
     {
         return _testingContext;
     }
 
 
+    /**
+     * Sets the testing context.  Provided for extensibility purposes.
+     */
+    @SuppressWarnings("unused")
     protected void setTestingContext(final ITestingContext testingContext)
     {
         _testingContext = testingContext;

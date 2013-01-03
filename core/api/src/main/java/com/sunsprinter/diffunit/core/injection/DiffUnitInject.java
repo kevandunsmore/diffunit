@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import java.lang.annotation.Target;
 
 
 /**
- * DiffUnitInject
+ * Use this annotation to instruct DiffUnit to inject specific object instances into your test.  There are a number of
+ * different useful collaborators that can be injected using this annotation but the easiest way is to just extend the
+ * base test class, {@link com.sunsprinter.diffunit.core.AbstractDiffUnitTest}, which handles all of that for you.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
