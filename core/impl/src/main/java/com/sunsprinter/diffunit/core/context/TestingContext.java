@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import com.sunsprinter.diffunit.core.translators.IRootTranslator;
 
 
 /**
- * TestingContext
+ * Bean implementation of the {@link com.sunsprinter.diffunit.core.context.ITestingContext} interface.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/12

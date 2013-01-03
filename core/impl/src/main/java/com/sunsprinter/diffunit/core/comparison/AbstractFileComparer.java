@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -33,35 +33,119 @@ import com.sunsprinter.diffunit.core.context.ITestingContext;
 
 
 /**
- * AbstractFileComparer
+ * Base class for file comparer implementations.  Concrete implementations will be specific to the testing framework in
+ * use (for example, JUnit or TestNG).  Provides all services other than failing the test.  Tests are failed in a
+ * framework-specific fashion so that function is left to concrete subclasses.<p/>
+ *
+ * Like all test collaborators, you can get the file comparer in a number of different ways.  The easiest way is to
+ * inherit from {@link com.sunsprinter.diffunit.core.AbstractDiffUnitTest} and call {@code getFileComparer}.<p/>
+ *
+ * <pre>
+ * public class MyTest extends AbstractDiffUnitTest
+ * {
+ *     .
+ *     .
+ *     .
+ *    {@code @Test}
+ *     public void testSomething()
+ *     {
+ *         .
+ *         .
+ *         getFileComparer().registerFileToCompare(new File("MyFile.txt"));
+ *         .
+ *         .
+ *     }
+ * }
+ * </pre><p/>
+ *
+ * Alternatively, you can have it injected as part of the {@link com.sunsprinter.diffunit.core.context.ITestingContext}:<p/>
+ *
+ * <pre>
+ * public class MyTest extends AbstractDiffUnitTest
+ * {
+ *     .
+ *     .
+ *     .
+ *
+ *   {@code @DiffUnitInject}
+ *    private ITestingContext _testingContext;
+ *
+ *    .
+ *    .
+ *    .
+ * }
+ * </pre><p/>
+ *
+ * Lastly, you can have it directly injected using the {@link com.sunsprinter.diffunit.core.injection.DiffUnitInject}
+ * annotation:</p>
+ *
+ * <pre>
+ * public class MyTest extends AbstractDiffUnitTest
+ * {
+ *     .
+ *     .
+ *     .
+ *
+ *   {@code @DiffUnitInject}
+ *    private IFileComparer _fileComparer;
+ *
+ *    .
+ *    .
+ *    .
+ * }
+ * </pre>
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public abstract class AbstractFileComparer implements IFileComparer
 {
+    /**
+     * The testing context.  Set by DiffUnit.
+     */
     private ITestingContext _testingContext;
+
+    /**
+     * A collection of the files to be compared with known good versions.
+     */
     private Collection<File> _filesToCompare = new LinkedList<File>();
 
 
+    /**
+     * Returns the collection of files to be compared with known good versions.  May be empty.  Will never be null.
+     */
     protected Collection<File> getFilesToCompare()
     {
         return _filesToCompare;
     }
 
 
+    /**
+     * Sets the collection of files to be compared with known good versions.  May be empty.  Will never be null.
+     * Provided for extensibility.
+     *
+     * @param filesToCompare The collection of files to compare.  May not be null.
+     */
     protected void setFilesToCompare(final Collection<File> filesToCompare)
     {
         _filesToCompare = filesToCompare;
     }
 
 
+    /**
+     * Returns the testing context.
+     */
     protected ITestingContext getTestingContext()
     {
         return _testingContext;
     }
 
 
+    /**
+     * Sets the testing context.
+     *
+     * @param testingContext The context to use.  May not be null.
+     */
     public void setTestingContext(final ITestingContext testingContext)
     {
         _testingContext = testingContext;
@@ -149,11 +233,22 @@ public abstract class AbstractFileComparer implements IFileComparer
                 IOUtils.closeQuietly(knownGoodInputStream);
                 IOUtils.closeQuietly(generatedInputStream);
             }
-
         }
     }
 
 
+    /**
+     * Asserts that the text in the supplied collection of known good file lines is equal to the one in the generated
+     * line collection.
+     *
+     * @param knownGoodLines        The collection of text file lines that forms the known good file.  May not be null.
+     * @param knownGoodPath         The path to the known good file.  May not be null.
+     * @param knownGoodLocationType The location of the known good file.  May not be null.
+     * @param generatedLines        The collection of strings that forms the generated output file.  May not be null.
+     * @param generatedFile         The generated file.  May not be null.
+     *
+     * @throws Exception If the known good file is different from the generated file.
+     */
     protected void assertEqual(final Collection<String> knownGoodLines,
                                final String knownGoodPath,
                                final InputLocationType knownGoodLocationType,
@@ -175,7 +270,7 @@ public abstract class AbstractFileComparer implements IFileComparer
         if (knownGoodLines.size() != generatedLines.size())
         {
             errorBuilder.append(String.format("The number of lines is different.  The known good file has %d lines.  " +
-                                              "The generated file has %d lines.  ",
+                                                      "The generated file has %d lines.  ",
                                               knownGoodLines.size(), generatedLines.size()));
         }
 
@@ -191,8 +286,8 @@ public abstract class AbstractFileComparer implements IFileComparer
             {
                 firstDifferenceMessage =
                         String.format("First difference detected at line number %d, position %d.\n\n" +
-                                      "Known Good: %s\n" +
-                                      "Generated : %s\n",
+                                              "Known Good: %s\n" +
+                                              "Generated : %s\n",
                                       i,
                                       StringUtils.indexOfDifference(knownGoodLine,
                                                                     generatedLine),
@@ -214,5 +309,12 @@ public abstract class AbstractFileComparer implements IFileComparer
     }
 
 
+    /**
+     * Testing framework-specific method of failing the test.
+     *
+     * @param message The message to show - the reason the test failed.
+     *
+     * @throws Exception If the test fails.
+     */
     protected abstract void fail(final String message) throws Exception;
 }

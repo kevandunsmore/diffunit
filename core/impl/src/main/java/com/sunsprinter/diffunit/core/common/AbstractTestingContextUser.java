@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,12 +22,14 @@ import com.sunsprinter.diffunit.core.context.TestingContextHolder;
 
 
 /**
- * AbstractTestingContextUser
+ * Abstract class that forms a base for classes that use the testing context.  If no specific testing context is set,
+ * this class will use the one on the {@link com.sunsprinter.diffunit.core.context.TestingContextHolder} when its {@link
+ * #getTestingContext()} method is called.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/15
  */
-public class AbstractTestingContextUser
+public abstract class AbstractTestingContextUser
 {
     /**
      * The context of the test.
@@ -35,13 +37,24 @@ public class AbstractTestingContextUser
     private ITestingContext _testingContext;
 
 
+    /**
+     * Returns the testing context for this object.  Will use the specific one set on it by a previous call to {@link
+     * #setTestingContext(com.sunsprinter.diffunit.core.context.ITestingContext)}.  If nothing has been set, will return
+     * the testing context held by {@link com.sunsprinter.diffunit.core.context.TestingContextHolder#CONTEXT}.
+     */
     protected ITestingContext getTestingContext()
     {
         return _testingContext == null ? TestingContextHolder.CONTEXT : _testingContext;
     }
 
 
-    public void setTestingContext(final ITestingContext testingContext)
+    /**
+     * Sets the testing context.
+     *
+     * @param testingContext The context to use or null if this user should use the testing context on {@link
+     *                       com.sunsprinter.diffunit.core.context.TestingContextHolder#CONTEXT}.
+     */
+    protected void setTestingContext(final ITestingContext testingContext)
     {
         _testingContext = testingContext;
     }

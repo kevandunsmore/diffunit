@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.sunsprinter.diffunit.core.common.AbstractTestingContextUser;
 import org.apache.commons.io.FileUtils;
 
 import com.sunsprinter.diffunit.core.comparison.IFileComparer;
@@ -52,52 +53,48 @@ import com.sunsprinter.diffunit.core.translators.ToStringTranslator;
 
 
 /**
- * AbstractDiffUnitInitializer
+ * Abstract base for a testing framework-specific DiffUnit initializer.  Typically there are steps that are testing
+ * framework specific in the initialization process (for example, creating the specific file comparer) so these are left
+ * to concrete subclasses.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/12
  */
-public abstract class AbstractDiffUnitInitializer
+public abstract class AbstractDiffUnitInitializer extends AbstractTestingContextUser
 {
-    private TestingContext _testingContext;
-
-
-    protected TestingContext getTestingContext()
-    {
-        return _testingContext;
-    }
-
-
-    protected void setTestingContext(final TestingContext testingContext)
-    {
-        _testingContext = testingContext;
-    }
-
-
+    /**
+     * Initializes DiffUnit.
+     *
+     * @param test     The instance of the test class being executed.  May not be null.
+     * @param testName The name of the test being executed.  May not be null.
+     *
+     * @return The testing context created.  Will never be null.
+     * @throws Exception If there's a problem initializing.
+     */
     public ITestingContext initialize(final Object test, final String testName) throws Exception
     {
-        setTestingContext(createTestingContext());
+        final TestingContext testingContext = createTestingContext();
+        use(testingContext);
+        TestingContextHolder.CONTEXT = testingContext;
 
-        getTestingContext().setOutputObjects(createOutputObjectsCollection());
-        getTestingContext().setTestName(testName);
-        getTestingContext().setTest(test);
-        getTestingContext().setInstanceTracker(new ObjectInstanceTracker());
+        testingContext.setOutputObjects(createOutputObjectsCollection());
+        testingContext.setTestName(testName);
+        testingContext.setTest(test);
+        testingContext.setInstanceTracker(new ObjectInstanceTracker());
 
         final IRootTranslator rootTranslator = createRootTranslator();
         bindStandardTypesToTranslators(rootTranslator);
 
         final RegExReplacementTranslatorDecorator<IRootTranslator> regExDecorator = createRegExReplacementTranslatorDecorator(rootTranslator);
         regExDecorator.setReplacementPairs(getTestingContext().getRegExReplacementPairs());
-        getTestingContext().setRootTranslator(regExDecorator.getProxy());
+        testingContext.setRootTranslator(regExDecorator.getProxy());
 
         installRegExReplacementPairs();
 
-        getTestingContext().setOutputManager(createOutputManager());
-        getTestingContext().setFileComparer(createFileComparer());
+        testingContext.setOutputManager(createOutputManager());
+        testingContext.setFileComparer(createFileComparer());
 
-        TestingContextHolder.CONTEXT = getTestingContext();
-
-        getTestingContext().setOutputDirectory(determineTestOutputDirectory());
+        testingContext.setOutputDirectory(determineTestOutputDirectory());
         if (getTestingContext().getOutputDirectory().exists())
         {
             FileUtils.deleteDirectory(getTestingContext().getOutputDirectory());
@@ -115,6 +112,13 @@ public abstract class AbstractDiffUnitInitializer
     }
 
 
+    /**
+     * Installs standard reg exp replacement pairs.  This implementation:
+     *
+     * <pre>
+     *     1. Installs the {@link com.sunsprinter.diffunit.core.translators.StackTraceReplacementPair}.
+     * </pre>
+     */
     protected void installRegExReplacementPairs()
     {
         getTestingContext().getRegExReplacementPairs().add(new StackTraceReplacementPair());
@@ -209,6 +213,5 @@ public abstract class AbstractDiffUnitInitializer
                                       classOutputLocation,
                                       getTestingContext().getTestClass().getSimpleName(),
                                       getTestingContext().getTestName()));
-
     }
 }

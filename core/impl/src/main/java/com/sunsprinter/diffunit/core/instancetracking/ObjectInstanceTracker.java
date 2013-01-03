@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,12 @@ import java.util.Map;
 
 
 /**
- * ObjectInstanceTracker
+ * Standard implementation of {@link com.sunsprinter.diffunit.core.instancetracking.IObjectInstanceTracker}.  Holds a
+ * map to cross reference types with the latest id number for that type and a map to cross reference each object's
+ * identity hash code with the allocated object identifier.<p/>
+ *
+ * This tracker must be reset between tests.  Filling it with objects and keeping it around for a long time is a great
+ * way to run out of memory.  Fortunately, DiffUnit resets it automatically upon execution of each test.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/11
