@@ -31,7 +31,6 @@
     <name>DiffUnit - JUnit - POM</name>
 
     <modules>
-        <module>api</module>
         <module>impl</module>
     </modules>
 

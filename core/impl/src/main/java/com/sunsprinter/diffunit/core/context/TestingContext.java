@@ -18,9 +18,12 @@ package com.sunsprinter.diffunit.core.context;
 
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sunsprinter.diffunit.core.comparison.IFileComparer;
 import com.sunsprinter.diffunit.core.instancetracking.IObjectInstanceTracker;
@@ -37,7 +40,7 @@ import com.sunsprinter.diffunit.core.translators.IRootTranslator;
  */
 public class TestingContext implements ITestingContext
 {
-    private String _testName;
+    private Method _testMethod;
     private Object _test;
     private IObjectInstanceTracker _instanceTracker;
     private IRootTranslator _rootTranslator;
@@ -46,6 +49,7 @@ public class TestingContext implements ITestingContext
     private IFileComparer _fileComparer;
     private File _outputDirectory;
     private List<IRegExReplacementPair> _regExReplacementPairs = new ArrayList<IRegExReplacementPair>();
+    private Map<String, String> _nameValuePairs = new HashMap<>();
 
 
     public File getOutputDirectory()
@@ -98,13 +102,20 @@ public class TestingContext implements ITestingContext
 
     public String getTestName()
     {
-        return _testName;
+        return getTestMethod().getName();
     }
 
 
-    public void setTestName(final String testName)
+
+    public Method getTestMethod()
     {
-        _testName = testName;
+        return _testMethod;
+    }
+
+
+    public void setTestMethod(Method testMethod)
+    {
+        _testMethod = testMethod;
     }
 
 
@@ -163,5 +174,17 @@ public class TestingContext implements ITestingContext
     public void setRegExReplacementPairs(final List<IRegExReplacementPair> regExReplacementPairs)
     {
         _regExReplacementPairs = regExReplacementPairs;
+    }
+
+
+    public Map<String, String> getNameValuePairs()
+    {
+        return _nameValuePairs;
+    }
+
+
+    public void setNameValuePairs(Map<String, String> nameValuePairs)
+    {
+        _nameValuePairs = nameValuePairs;
     }
 }

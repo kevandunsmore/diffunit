@@ -22,9 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -162,25 +164,37 @@ public abstract class AbstractFileComparer implements IFileComparer
     @Override
     public void compareAllFiles() throws Exception
     {
-        // Get the input location type from the annotation on the class.  If we don't have one we default to CLASSPATH.
-        final DiffUnitInputLocation classInputLocationAnnotation =
-                getTestingContext().getTestClass().getAnnotation(DiffUnitInputLocation.class);
+        // Get the input location from the method first, because it's the most specific.
+        DiffUnitInputLocation classInputLocationAnnotation = getTestingContext().getTestMethod().getAnnotation(DiffUnitInputLocation.class);
+        if (classInputLocationAnnotation == null)
+        {
+            // Nothing declared at the method level.  Let's try the class.
+            classInputLocationAnnotation = getTestingContext().getTestClass().getAnnotation(DiffUnitInputLocation.class);
+        }
+
+        // Get the input location type from the annotation.  If we don't have one we default to CLASSPATH.
         final InputLocationType locationType = classInputLocationAnnotation == null ? InputLocationType.CLASSPATH : classInputLocationAnnotation.locationType();
-        final String classInputLocation = classInputLocationAnnotation == null ? null : classInputLocationAnnotation.location();
+        String classInputLocation = classInputLocationAnnotation == null ? null : classInputLocationAnnotation.location();
+        if (classInputLocation != null)
+        {
+            // Replace all placeholders with the name / value pair text.
+            for (final Map.Entry<String, String> keyValuePair : getTestingContext().getNameValuePairs().entrySet())
+            {
+                classInputLocation = classInputLocation.replaceAll("\\{" + keyValuePair.getKey() + "\\}", keyValuePair.getValue());
+            }
+        }
 
         // Figure out the input location path by checking to see what our location type is.
         final String inputLocation;
         if (locationType == InputLocationType.CLASSPATH)
         {
-            inputLocation = classInputLocation == null ? String.format("/%s/%s",
-                                                                       getTestingContext().getTestClass().getSimpleName(),
-                                                                       getTestingContext().getTestName()) : classInputLocation;
+            inputLocation = classInputLocation == null ?
+                    String.format("/%s/%s", getTestingContext().getTestClass().getSimpleName(), getTestingContext().getTestName()) : classInputLocation;
         }
         else
         {
-            inputLocation = classInputLocation == null ? String.format("src/test/resources/%s/%s",
-                                                                       getTestingContext().getTestClass().getSimpleName(),
-                                                                       getTestingContext().getTestName()) : classInputLocation;
+            inputLocation = classInputLocation == null ?
+                    String.format("src/test/resources/%s/%s", getTestingContext().getTestClass().getSimpleName(), getTestingContext().getTestName()) : classInputLocation;
         }
 
         // Go through all the files we wrote and compare them against the known good ones stored in the input location.

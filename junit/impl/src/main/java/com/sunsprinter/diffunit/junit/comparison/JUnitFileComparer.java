@@ -17,9 +17,8 @@
 package com.sunsprinter.diffunit.junit.comparison;
 
 
-import org.junit.Assert;
-
 import com.sunsprinter.diffunit.core.comparison.AbstractFileComparer;
+import org.junit.Assert;
 
 
 /**

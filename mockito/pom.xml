@@ -31,7 +31,6 @@
     <name>DiffUnit - Mockito - POM</name>
 
     <modules>
-        <module>api</module>
         <module>impl</module>
     </modules>
 

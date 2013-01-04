@@ -17,16 +17,7 @@
 package com.sunsprinter.diffunit.core.initialization;
 
 
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
-
 import com.sunsprinter.diffunit.core.common.AbstractTestingContextUser;
-import org.apache.commons.io.FileUtils;
-
 import com.sunsprinter.diffunit.core.comparison.IFileComparer;
 import com.sunsprinter.diffunit.core.context.ITestingContext;
 import com.sunsprinter.diffunit.core.context.TestingContext;
@@ -50,6 +41,14 @@ import com.sunsprinter.diffunit.core.translators.StackTraceReplacementPair;
 import com.sunsprinter.diffunit.core.translators.ThrowableMessageTranslator;
 import com.sunsprinter.diffunit.core.translators.ToPrettyXmlTranslator;
 import com.sunsprinter.diffunit.core.translators.ToStringTranslator;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 
 /**
@@ -65,22 +64,27 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
     /**
      * Initializes DiffUnit.
      *
-     * @param test     The instance of the test class being executed.  May not be null.
-     * @param testName The name of the test being executed.  May not be null.
+     * @param test           The instance of the test class being executed.  May not be null.
+     * @param testName       The name of the test being executed.  May not be null.
+     * @param nameValuePairs The name value pair map.  May not be null.  The values contained here are used in
+     *                       preference to the default name / value pair values.
      *
      * @return The testing context created.  Will never be null.
      * @throws Exception If there's a problem initializing.
      */
-    public ITestingContext initialize(final Object test, final String testName) throws Exception
+    public ITestingContext initialize(final Object test, final String testName, final Map<String, String> nameValuePairs) throws Exception
     {
         final TestingContext testingContext = createTestingContext();
         use(testingContext);
         TestingContextHolder.CONTEXT = testingContext;
 
+        initializeNameValuePairsWithDefaultValues(testingContext, test, testName);
+        overlayCustomNameValuePairs(testingContext, nameValuePairs);
+
         testingContext.setOutputObjects(createOutputObjectsCollection());
-        testingContext.setTestName(testName);
         testingContext.setTest(test);
         testingContext.setInstanceTracker(new ObjectInstanceTracker());
+        testingContext.setTestMethod(testingContext.getTestClass().getMethod(testName));
 
         final IRootTranslator rootTranslator = createRootTranslator();
         bindStandardTypesToTranslators(rootTranslator);
@@ -113,6 +117,31 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
 
 
     /**
+     * Overlays the custom name-value pair map on the default name-value pair map, overwriting any default values.
+     */
+    protected void overlayCustomNameValuePairs(final TestingContext testingContext, final Map<String, String> nameValuePairs)
+    {
+        testingContext.getNameValuePairs().putAll(nameValuePairs);
+    }
+
+
+    /**
+     * Initializes the testing context's name-value pair map with default values.  This implementation sets the
+     * following:<p/>
+     *
+     * <pre>
+     *     TestClassName: The name of the test class being executed.
+     *     TestName:      The name of the test being executed.
+     * </pre>
+     */
+    protected void initializeNameValuePairsWithDefaultValues(final TestingContext testingContext, final Object test, final String testName)
+    {
+        testingContext.getNameValuePairs().put("TestClassName", test.getClass().getSimpleName());
+        testingContext.getNameValuePairs().put("TestName", testName);
+    }
+
+
+    /**
      * Installs standard reg exp replacement pairs.  This implementation:
      *
      * <pre>
@@ -127,13 +156,13 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
 
     protected RegExReplacementTranslatorDecorator<IRootTranslator> createRegExReplacementTranslatorDecorator(final IRootTranslator rootTranslator)
     {
-        return new RegExReplacementTranslatorDecorator<IRootTranslator>(rootTranslator);
+        return new RegExReplacementTranslatorDecorator<>(rootTranslator);
     }
 
 
     protected Collection<Object> createOutputObjectsCollection()
     {
-        return new LinkedList<Object>();
+        return new LinkedList<>();
     }
 
 
@@ -155,8 +184,8 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
         translator.bind(new CollectionTranslator(), Collection.class);
         translator.bind(new MapTranslator(), Map.class);
         translator.bind(new ToPrettyXmlTranslator<MapTranslator.KeyValuePair>(), MapTranslator.KeyValuePair.class);
-        translator.bind(new ToStringTranslator<Object>(), IObjectIdentifier.class);
-        translator.bind(new ThrowableMessageTranslator<Throwable>(), Throwable.class);
+        translator.bind(new ToStringTranslator<>(), IObjectIdentifier.class);
+        translator.bind(new ThrowableMessageTranslator<>(), Throwable.class);
     }
 
 
@@ -174,7 +203,7 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
 
     protected Map<Object, Object> createInjectionMap()
     {
-        return new HashMap<Object, Object>();
+        return new HashMap<>();
     }
 
 

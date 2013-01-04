@@ -18,8 +18,10 @@ package com.sunsprinter.diffunit.core.context;
 
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.sunsprinter.diffunit.core.comparison.IFileComparer;
 import com.sunsprinter.diffunit.core.instancetracking.IObjectInstanceTracker;
@@ -52,6 +54,11 @@ public interface ITestingContext
      * Returns the name of the currently executing test.
      */
     String getTestName();
+
+    /**
+     * Returns the method of the currently executing test.
+     */
+    Method getTestMethod();
 
     /**
      * Returns the class of the test.
@@ -107,4 +114,6 @@ public interface ITestingContext
      *                         written to a file.
      */
     void setRegExReplacementPairs(List<IRegExReplacementPair> replacementPairs);
+
+    Map<String, String> getNameValuePairs();
 }

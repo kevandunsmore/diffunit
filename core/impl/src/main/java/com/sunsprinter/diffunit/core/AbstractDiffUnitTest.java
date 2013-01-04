@@ -18,8 +18,10 @@ package com.sunsprinter.diffunit.core;
 
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.sunsprinter.diffunit.core.comparison.IFileComparer;
 import com.sunsprinter.diffunit.core.context.ITestingContext;
@@ -80,6 +82,13 @@ public class AbstractDiffUnitTest implements ITestingContext, IRootTranslator, I
     public String getTestName()
     {
         return getTestingContext().getTestName();
+    }
+
+
+    @Override
+    public Method getTestMethod()
+    {
+        return getTestingContext().getTestMethod();
     }
 
 
@@ -192,5 +201,12 @@ public class AbstractDiffUnitTest implements ITestingContext, IRootTranslator, I
     public void writeFile(final String fileName) throws RuntimeException
     {
         getOutputManager().writeFile(fileName);
+    }
+
+
+    @Override
+    public Map<String, String> getNameValuePairs()
+    {
+        return getTestingContext().getNameValuePairs();
     }
 }

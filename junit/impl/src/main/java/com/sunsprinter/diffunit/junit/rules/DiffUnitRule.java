@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,70 +17,144 @@
 package com.sunsprinter.diffunit.junit.rules;
 
 
+import com.sunsprinter.diffunit.junit.runners.model.DiffUnitStatement;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import com.sunsprinter.diffunit.core.context.ITestingContext;
-import com.sunsprinter.diffunit.core.initialization.AbstractDiffUnitInitializer;
-import com.sunsprinter.diffunit.junit.initialization.DiffUnitJUnitInitializer;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
- * DiffUnitRule
+ * This class forms the standard way of informing JUnit that the test to be executed is a DiffUnit test case.  Per JUnit
+ * standards, set a public member of your test case to an instance of this class.<p/>
+ *
+ * <pre>
+ * public class MyTest
+ * {
+ *    {@code @Rule}
+ *     public DiffUnitRule _rule = new DiffUnitRule(this);
+ *
+ *     .
+ *     .
+ *     .
+ * }
+ * </pre><p/>
+ *
+ * Of course, to do anything useful you'll want the {@link com.sunsprinter.diffunit.core.context.ITestingContext}
+ * injected:
+ *
+ * <pre>
+ * public class MyTest
+ * {
+ *    {@code @Rule}
+ *     public DiffUnitRule _rule = new DiffUnitRule(this);
+ *
+ *    {@code @DiffUnitInject}
+ *     private ITestingContext _testingContext;
+ *
+ *     .
+ *     .
+ *     .
+ * }
+ * </pre><p/>
+ *
+ * or
+ *
+ * <pre>
+ * public class MyTest extends AbstractDiffUnitTest
+ * {
+ *    {@code @Rule}
+ *     public DiffUnitRule _rule = new DiffUnitRule(this);
+ *
+ *     .
+ *     .
+ *     .
+ * }
+ * </pre><p/>
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public class DiffUnitRule implements TestRule
 {
+    /**
+     * The test instance.
+     */
     private Object _test;
 
+    /**
+     * The name value pairs for the test.  Defaults to an empty map.
+     */
+    private Map<String, String> _nameValuePairs = new HashMap<>();
 
+
+    /**
+     * Creates a new rule with the supplied test object.
+     *
+     * @param test The test being executed.  May not be null.
+     */
     public DiffUnitRule(final Object test)
     {
         _test = test;
     }
 
 
+    /**
+     * Returns the test object.  Will never be null.
+     */
     protected Object getTest()
     {
         return _test;
     }
 
 
+    /**
+     * Sets the test object.
+     *
+     * @param test The test object.  May not be null.
+     */
     protected void setTest(final Object test)
     {
         _test = test;
     }
 
 
+    /**
+     * {@inheritDoc}<p/>
+     *
+     * @return a new instance of {@link com.sunsprinter.diffunit.junit.runners.model.DiffUnitStatement}.
+     */
     @Override
     public Statement apply(final Statement base, final Description description)
     {
-        return new Statement()
-        {
-            @Override
-            public void evaluate() throws Throwable
-            {
-                final ITestingContext context = createInitializer().initialize(getTest(), description.getMethodName());
-
-                base.evaluate();
-
-                // If the test hasn't explicitly written a file then we do it here.
-                if (!context.getOutputObjects().isEmpty())
-                {
-                    context.getOutputManager().writeFile("results.txt");
-                }
-
-                context.getFileComparer().compareAllFiles();
-            }
+        return new DiffUnitStatement(description, getTest(), base, getNameValuePairs());
+    }
 
 
-            protected AbstractDiffUnitInitializer createInitializer()
-            {
-                return new DiffUnitJUnitInitializer();
-            }
-        };
+    public DiffUnitRule addNameValuePair(final String name, final String value)
+    {
+        getNameValuePairs().put(name, value);
+        return this;
+    }
+
+
+    public DiffUnitRule removeNameValuePair(final String name)
+    {
+        getNameValuePairs().remove(name);
+        return this;
+    }
+
+
+    public Map<String, String> getNameValuePairs()
+    {
+        return _nameValuePairs;
+    }
+
+
+    public void setNameValuePairs(final Map<String, String> nameValuePairs)
+    {
+        _nameValuePairs = nameValuePairs;
     }
 }

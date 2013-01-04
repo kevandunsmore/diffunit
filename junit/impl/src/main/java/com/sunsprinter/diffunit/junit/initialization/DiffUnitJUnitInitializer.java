@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,21 +17,27 @@
 package com.sunsprinter.diffunit.junit.initialization;
 
 
-import com.sunsprinter.diffunit.core.comparison.IFileComparer;
 import com.sunsprinter.diffunit.core.initialization.AbstractDiffUnitInitializer;
 import com.sunsprinter.diffunit.junit.comparison.JUnitFileComparer;
 
 
 /**
- * DiffUnitJUnitInitializer
+ * JUnit-specific DiffUnit initializer.  Extends the core superclass to implement the file comparer factory method.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public class DiffUnitJUnitInitializer extends AbstractDiffUnitInitializer
 {
+    /**
+     * {@inheritDoc}<p/>
+     *
+     * Creates an instance of {@link com.sunsprinter.diffunit.junit.comparison.JUnitFileComparer}.
+     *
+     * @return An initialized instance of {@link com.sunsprinter.diffunit.junit.comparison.JUnitFileComparer}.
+     */
     @Override
-    protected IFileComparer createFileComparer()
+    protected JUnitFileComparer createFileComparer()
     {
         final JUnitFileComparer comparer = new JUnitFileComparer();
 
