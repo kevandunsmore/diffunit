@@ -212,7 +212,7 @@ public class UnitAbstractDiffUnitInitializerTest
         assertTrue(testingContext.getOutputDirectory().exists());
         assertEquals(0, testingContext.getOutputDirectory().list().length);
 
-        // Make sure the injector was called.
+        // Make sure the injection was called.
         verify(injector).inject(this);
     }
 

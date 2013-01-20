@@ -25,6 +25,12 @@ package com.sunsprinter.diffunit.core.injection;
  */
 public class DiffUnitInjectionException extends Exception
 {
+    public DiffUnitInjectionException(final String message)
+    {
+        super(message);
+    }
+
+
     public DiffUnitInjectionException(final String message, final Throwable cause)
     {
         super(message, cause);

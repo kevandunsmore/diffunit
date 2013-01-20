@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -24,13 +24,27 @@ import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * Injector
+ * A simple injection implementation that sets values on any class with fields declared with the {@link
+ * com.sunsprinter.diffunit.core.injection.DiffUnitInject} annotation.<p/>
+ *
+ * This injector sets value on the target object (usually the test object itself but you can use any object if you want)
+ * by looking up the appropriate key in its injection map.  If the {@link com.sunsprinter.diffunit.core.injection.DiffUnitInject}
+ * annotation has an {@code objectId} value then it will be used as the key in the map lookup operation.  If the
+ * annotation has no {@code objectId} value then the target field's type is used as the key in the lookup.  This means
+ * that you must have a strict type match; this injector doesn't do anything fancy like hierarchy walking or best type
+ * matching.<p/>
+ *
+ * If you try to inject something that's not known to this injector, it will throw an exception during the {@link
+ * #inject(Object)} operation.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public class Injector implements IInjector
 {
+    /**
+     * The map of things to be injected.
+     */
     private Map<Object, Object> _injectionMap;
 
 
@@ -64,6 +78,20 @@ public class Injector implements IInjector
                 if (annotation != null)
                 {
                     final Object key = StringUtils.isEmpty(annotation.objectId()) ? field.getType() : annotation.objectId();
+                    final Object value = getInjectionMap().get(key);
+                    if (value == null)
+                    {
+                        throw new DiffUnitInjectionException(
+                                String.format("DiffUnit unable to inject field '%s' of class '%s' on test of class '%s'.  " +
+                                                      "Component key is '%s'.  Target field type is '%s'.  No object " +
+                                                      "with type or key '%s' held in injection map.",
+                                              field.getName(),
+                                              currentClass.getName(),
+                                              testClass.getName(),
+                                              key,
+                                              field.getType().getName(),
+                                              key));
+                    }
 
                     final boolean fieldAccessible = field.isAccessible();
                     try
@@ -75,12 +103,15 @@ public class Injector implements IInjector
                     {
                         throw new DiffUnitInjectionException(
                                 String.format("DiffUnit unable to inject field '%s' of class '%s' on test of class '%s'.  " +
-                                              "Component key is '%s'.  Target field type is '%s'.",
+                                                      "Component key is '%s'.  Target field type is '%s'.  Value is " +
+                                                      "of type '%s'.  Value is '%s'.",
                                               field.getName(),
                                               currentClass.getName(),
                                               testClass.getName(),
                                               key,
-                                              field.getType().getName()),
+                                              field.getType().getName(),
+                                              value.getClass().getName(),
+                                              value.toString()),
                                 e);
                     }
                     finally
