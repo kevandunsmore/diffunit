@@ -43,6 +43,26 @@ import java.lang.annotation.Target;
  *
  * // Input files to be found on the file system under location /wibble/giblets
  * {@code @DiffUnitInputLocation(locationType = InputLocationType.FILE_SYSTEM, location = "/wibble/giblets"}
+ * </pre><p/>
+ *
+ * You can also use some replacement values.  Actually, anything in the name/value pair collection held by the testing
+ * context ({@link com.sunsprinter.diffunit.core.context.ITestingContext#getNameValuePairs()} can be used to substitute
+ * runtime values.  For example:
+ *
+ * <pre>
+ * // Input files to be found on the classpath under location /MyTest/testSomething
+ * {@code @DiffUnitInputLocation(location = "/{TestClassName}/{TestName}"}
+ * </pre><p/>
+ *
+ * If you add values to the name/value pair map, you can substitute those too:<p/>
+ *
+ * <pre>
+ * {@code @DiffUnitInputLocation(location = "/{MyCustomThing}/{AnotherCustomThing}"}
+ * public void testSomething()
+ * {
+ *     getTestingContext().getNameValuePairs().put("MyCustomThing", "SomethingCustom");
+ *     getTestingContext().getNameValuePairs().put("AnotherCustomThing", calculateAnotherCustomThing());
+ * }
  * </pre>
  *
  * @author Kevan Dunsmore

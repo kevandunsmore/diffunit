@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,21 +17,23 @@
 package com.sunsprinter.diffunit.core.translators;
 
 
+import com.sunsprinter.diffunit.core.common.AbstractTestingContextUser;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sunsprinter.diffunit.core.common.AbstractTestingContextUser;
-
 
 /**
- * RegExReplacementTranslatorDecorator
+ * Can be used to generate a proxy decorator around a {@link com.sunsprinter.diffunit.core.translators.ITranslator} that
+ * will replace all of the translator's output using regular expressions.  Useful if you have variable output from a
+ * translator.  You can use regular expressions to match and replace the values with something consistent to facilitate
+ * comparison.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/14
@@ -67,7 +69,7 @@ public class RegExReplacementTranslatorDecorator<T extends ITranslator> extends 
 
     protected List<IRegExReplacementPair> createReplacementPairsCollection()
     {
-        return new LinkedList<IRegExReplacementPair>();
+        return new LinkedList<>();
     }
 
 
@@ -109,10 +111,10 @@ public class RegExReplacementTranslatorDecorator<T extends ITranslator> extends 
         Object retVal = method.invoke(getDelegate(), args);
 
         if (retVal != null &&
-            method.getName().equals("translate") &&
-            method.getReturnType().equals(String.class) &&
-            method.getParameterTypes().length == 1 &&
-            method.getParameterTypes()[0].equals(Object.class))
+                method.getName().equals("translate") &&
+                method.getReturnType().equals(String.class) &&
+                method.getParameterTypes().length == 1 &&
+                method.getParameterTypes()[0].equals(Object.class))
         {
             String updatedRetVal = (String)retVal;
 

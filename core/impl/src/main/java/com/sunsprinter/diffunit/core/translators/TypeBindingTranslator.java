@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ public class TypeBindingTranslator extends AbstractTranslator<Object> implements
 
     /**
      * Factory method to create the default translator.  By default returns a new instance of {@link
-     * ObjectInstanceTrackingTranslator}. Subclasses may override to supply a custom default translator.
+     * ObjectInstanceTrackingTranslator}. Subclasses may override to supply a testCustomLocationOnFileSystemAtMethodLevel default translator.
      *
      * @return The default translator.  Will never be <code>null</code>.
      */
@@ -146,25 +146,25 @@ public class TypeBindingTranslator extends AbstractTranslator<Object> implements
 
     /**
      * Factory method to create the translator map.  Creates a new instance of {@link HashMap}.  Subclasses may override
-     * to supply a custom translator map.
+     * to supply a testCustomLocationOnFileSystemAtMethodLevel translator map.
      *
      * @return The translator map.  Will never be <code>null</code>.
      */
     protected Map<Class<?>, ITranslator<Object>> createTranslatorMap()
     {
-        return new HashMap<Class<?>, ITranslator<Object>>();
+        return new HashMap<>();
     }
 
 
     /**
      * Factory method to create translation scope set.  Creates a new instance of {@link HashSet}.  Subclasses may
-     * override to supply a custom {@link java.util.Set} type.
+     * override to supply a testCustomLocationOnFileSystemAtMethodLevel {@link java.util.Set} type.
      *
      * @return The translation scope set.  Will never be <code>null</code>.
      */
     protected Set<Integer> createTranslationScopeSet()
     {
-        return new HashSet<Integer>();
+        return new HashSet<>();
     }
 
 

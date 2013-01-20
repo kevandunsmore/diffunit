@@ -17,21 +17,19 @@
 package com.sunsprinter.diffunit.core.comparison;
 
 
+import com.sunsprinter.diffunit.core.context.ITestingContext;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.sunsprinter.diffunit.core.context.ITestingContext;
 
 
 /**
@@ -95,7 +93,12 @@ import com.sunsprinter.diffunit.core.context.ITestingContext;
  *    .
  *    .
  * }
- * </pre>
+ * </pre><p/>
+ *
+ * <b>Fail on No Files Registered</b><br/> By default, the file comparer will fail the test when its {@link
+ * #compareAllFiles()} method is called and there are no files registered for comparison.  You can change this behavior
+ * by calling {@link #setFailOnNoFilesRegistered(boolean)}.  When the file comparer fails the test, it will do so by
+ * calling the {@link #fail(String)} method.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
@@ -110,7 +113,35 @@ public abstract class AbstractFileComparer implements IFileComparer
     /**
      * A collection of the files to be compared with known good versions.
      */
-    private Collection<File> _filesToCompare = new LinkedList<File>();
+    private Collection<File> _filesToCompare = new LinkedList<>();
+
+    /**
+     * A boolean that governs whether or not this comparer will fail in the event that it's asked to compare all files
+     * and there were no files registered for comparison.  Default is true.
+     */
+    private boolean _failOnNoFilesRegistered = true;
+
+
+    /**
+     * Returns true if this this comparer will fail in the event that it's asked to compare all files and there were no
+     * files registered for comparison, false if not.  Default is true.
+     */
+    public boolean getFailOnNoFilesRegistered()
+    {
+        return _failOnNoFilesRegistered;
+    }
+
+
+    /**
+     * Governs whether or not this comparer will fail in the event that it's asked to compare all files and there were
+     * no files registered for comparison.  Default is true.
+     *
+     * @param failOnNoFilesRegistered true to fail in the event that no files registered for comparison, false if not.
+     */
+    public void setFailOnNoFilesRegistered(boolean failOnNoFilesRegistered)
+    {
+        _failOnNoFilesRegistered = failOnNoFilesRegistered;
+    }
 
 
     /**
@@ -164,6 +195,19 @@ public abstract class AbstractFileComparer implements IFileComparer
     @Override
     public void compareAllFiles() throws Exception
     {
+        if (getFilesToCompare().isEmpty())
+        {
+            // Hmmmm... No files registered for comparison.  Should we fail?
+            if (getFailOnNoFilesRegistered())
+            {
+                // Yes.
+                fail("No files registered for comparison by DiffUnit.");
+            }
+
+            // Nope.  No point in doing anything else so we just return.
+            return;
+        }
+
         // Get the input location from the method first, because it's the most specific.
         DiffUnitInputLocation classInputLocationAnnotation = getTestingContext().getTestMethod().getAnnotation(DiffUnitInputLocation.class);
         if (classInputLocationAnnotation == null)

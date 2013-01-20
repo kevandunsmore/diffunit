@@ -48,7 +48,7 @@ public class TestingContext implements ITestingContext
     private IOutputManager _outputManager;
     private IFileComparer _fileComparer;
     private File _outputDirectory;
-    private List<IRegExReplacementPair> _regExReplacementPairs = new ArrayList<IRegExReplacementPair>();
+    private List<IRegExReplacementPair> _regExReplacementPairs = new ArrayList<>();
     private Map<String, String> _nameValuePairs = new HashMap<>();
 
 
@@ -132,16 +132,16 @@ public class TestingContext implements ITestingContext
     }
 
 
+    public void setInstanceTracker(final IObjectInstanceTracker instanceTracker)
+    {
+        _instanceTracker = instanceTracker;
+    }
+
+
     @Override
     public IRootTranslator getRootTranslator()
     {
         return _rootTranslator;
-    }
-
-
-    public void setInstanceTracker(final IObjectInstanceTracker instanceTracker)
-    {
-        _instanceTracker = instanceTracker;
     }
 
 

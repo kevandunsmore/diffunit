@@ -115,5 +115,8 @@ public interface ITestingContext
      */
     void setRegExReplacementPairs(List<IRegExReplacementPair> replacementPairs);
 
+    /**
+     * Returns the name / value pair map used to substitutions.  May be empty but will never be null.
+     */
     Map<String, String> getNameValuePairs();
 }

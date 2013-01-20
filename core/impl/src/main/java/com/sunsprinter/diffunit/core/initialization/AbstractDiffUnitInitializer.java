@@ -83,7 +83,7 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
 
         testingContext.setOutputObjects(createOutputObjectsCollection());
         testingContext.setTest(test);
-        testingContext.setInstanceTracker(new ObjectInstanceTracker());
+        testingContext.setInstanceTracker(createInstanceTracker());
         testingContext.setTestMethod(testingContext.getTestClass().getMethod(testName));
 
         final IRootTranslator rootTranslator = createRootTranslator();
@@ -117,7 +117,19 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
 
 
     /**
-     * Overlays the custom name-value pair map on the default name-value pair map, overwriting any default values.
+     * Factory method to create an instance tracker.  Returns a new instance of {@link
+     * com.sunsprinter.diffunit.core.instancetracking.ObjectInstanceTracker}. Override to customize the instance tracker
+     * used in the tests.
+     */
+    protected IObjectInstanceTracker createInstanceTracker()
+    {
+        return new ObjectInstanceTracker();
+    }
+
+
+    /**
+     * Overlays the testCustomLocationOnFileSystemAtMethodLevel name-value pair map on the default name-value pair map,
+     * overwriting any default values.
      */
     protected void overlayCustomNameValuePairs(final TestingContext testingContext, final Map<String, String> nameValuePairs)
     {
@@ -154,6 +166,14 @@ public abstract class AbstractDiffUnitInitializer extends AbstractTestingContext
     }
 
 
+    /**
+     * Factory method to create the translator decorator that replaces text output using regular expressions.  Override
+     * this method to customize the decorator.
+     *
+     * @param rootTranslator The root translator.  Will never be null.
+     *
+     * @return the translator decorator.  Will never be null.
+     */
     protected RegExReplacementTranslatorDecorator<IRootTranslator> createRegExReplacementTranslatorDecorator(final IRootTranslator rootTranslator)
     {
         return new RegExReplacementTranslatorDecorator<>(rootTranslator);

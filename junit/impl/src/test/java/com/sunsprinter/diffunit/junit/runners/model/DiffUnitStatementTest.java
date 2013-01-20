@@ -19,6 +19,7 @@ package com.sunsprinter.diffunit.junit.runners.model;
 
 import com.sunsprinter.diffunit.core.context.TestingContextHolder;
 import com.sunsprinter.diffunit.core.output.IOutputManager;
+import com.sunsprinter.diffunit.junit.comparison.JUnitFileComparer;
 import com.sunsprinter.diffunit.junit.initialization.DiffUnitJUnitInitializer;
 import org.junit.Before;
 import org.junit.Test;
@@ -145,7 +146,7 @@ public class DiffUnitStatementTest
         // Configure our JUnit mock test description object.
         when(_description.getMethodName()).thenReturn("testEvaluateWithCustomNameValuePairs");
 
-        // Set up some custom name / value pairs.
+        // Set up some testCustomLocationOnFileSystemAtMethodLevel name / value pairs.
         // Override the test class name.
         _nameValuePairs.put("TestClassName", "wibble");
 
@@ -196,6 +197,9 @@ public class DiffUnitStatementTest
     }
 
 
+    /**
+     * Class that allows us to test evaluation and share some code between tests.
+     */
     private class EvaluateTestMethodObject
     {
         private IOutputManager _outputManager;
@@ -229,6 +233,15 @@ public class DiffUnitStatementTest
                 protected IOutputManager createOutputManager()
                 {
                     return _outputManager;
+                }
+
+
+                @Override
+                protected JUnitFileComparer createFileComparer()
+                {
+                    final JUnitFileComparer fileComparer = super.createFileComparer();
+                    fileComparer.setFailOnNoFilesRegistered(false);
+                    return fileComparer;
                 }
             });
 

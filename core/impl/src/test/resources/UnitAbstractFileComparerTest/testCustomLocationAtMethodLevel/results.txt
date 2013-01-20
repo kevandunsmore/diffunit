@@ -1,0 +1,1 @@
+This text should appear in the default results.txt output file

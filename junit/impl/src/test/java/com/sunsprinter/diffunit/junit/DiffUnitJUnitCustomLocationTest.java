@@ -48,11 +48,11 @@ public class DiffUnitJUnitCustomLocationTest extends DiffUnitJUnitTest
 
     // Now we'll change the known-good location to the file system and test again.
     @Test
-    @DiffUnitInputLocation(locationType = InputLocationType.FILE_SYSTEM, location = "target/{TestClassName}/custom")
+    @DiffUnitInputLocation(locationType = InputLocationType.FILE_SYSTEM, location = "target/{TestClassName}/testCustomLocationOnFileSystemAtMethodLevel")
     public void testCustomLocationOnFileSystemAtMethodLevel() throws Exception
     {
         // First copy the known good file to the right location.
-        final File knownGoodDir = new File("target/" + getClass().getSimpleName() + "/custom");
+        final File knownGoodDir = new File("target/" + getClass().getSimpleName() + "/testCustomLocationOnFileSystemAtMethodLevel");
         if (knownGoodDir.exists())
         {
             FileUtils.forceDelete(knownGoodDir);
