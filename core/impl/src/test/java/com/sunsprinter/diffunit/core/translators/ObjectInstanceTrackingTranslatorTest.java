@@ -17,37 +17,28 @@
 package com.sunsprinter.diffunit.core.translators;
 
 
+import static org.junit.Assert.fail;
+
+
 /**
- * Tests the functionality of the {@link com.sunsprinter.diffunit.core.translators.AbstractDelegatingTranslator} class.
+ * Tests the functionality of the {@link com.sunsprinter.diffunit.core.translators.ObjectInstanceTrackingTranslator}
+ * class.
  *
  * @author Kevan Dunsmore
  * @created 2013/02/09
  */
-public class UnitAbstractDelegatingTranslatorTest extends AbstractDelegatingTranslatorTest<UnitAbstractDelegatingTranslatorTest.ConcreteTranslator>
+public class ObjectInstanceTrackingTranslatorTest extends AbstractDelegatingTranslatorTest<ObjectInstanceTrackingTranslator>
 {
     @Override
-    protected ConcreteTranslator createTranslator()
+    protected ObjectInstanceTrackingTranslator createTranslator()
     {
-        return new ConcreteTranslator();
+        return new ObjectInstanceTrackingTranslator();
     }
 
 
     @Override
     public void testTranslate() throws Exception
     {
-        // Do nothing.  The class doesn't define a translate method.
-    }
-
-
-    /**
-     * A concrete instance of the class, for testing purposes.
-     */
-    protected static class ConcreteTranslator extends AbstractDelegatingTranslator
-    {
-        @Override
-        protected String doTranslate(Object object) throws TranslationException
-        {
-            return null;
-        }
+        fail("broken");
     }
 }
