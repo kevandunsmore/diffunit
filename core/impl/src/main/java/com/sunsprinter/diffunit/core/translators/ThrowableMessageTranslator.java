@@ -22,7 +22,28 @@ import java.io.PrintWriter;
 
 
 /**
- * ThrowableMessageTranslator
+ * This translator converts a {@link Throwable} into a string by using its {@link Throwable#getMessage()}, optionally
+ * adding the message strings of the {@link Throwable#getCause()} (and sub causes), if present.<p/>
+ *
+ * To use:<p/>
+ *
+ * <pre>
+ * // Bind to all Throwable instances.  Outputs all messages, including cause messages.
+ * bind(new ThrowableMessageTranslator(), Throwable.class);
+ *
+ * // Or, just to a specific type.  Excludes cause messages.
+ * bind(new ThrowableMessageTranslator().excludeCause(), MyException.class);
+ * </pre><p/>
+ *
+ * Output looks like this, for a {@link Throwable} with nested causes:<p/>
+ *
+ * <pre>
+ * java.lang.Exception#4(message=outer)
+ *     caused by java.lang.Exception#5(message=inner1)
+ *         caused by java.lang.Exception#6(message=inner2)
+ * </pre><p/>
+ *
+ * Note the instance tracking number, obtained from {@link #getInstanceTracker()}.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/14
@@ -44,10 +65,34 @@ public class ThrowableMessageTranslator<T extends Throwable> extends AbstractTra
     }
 
 
+    /**
+     * Causes the translator to include cause {@link Throwable} messages, if any cause is present on the {@link
+     * Throwable} under translation.  Causes are included by default, so this call is not usually necessary.
+     *
+     * @param <I> The specific type of the translator.
+     *
+     * @return This translator, for call-chaining purposes.
+     */
     @SuppressWarnings("unchecked")
-    public <I extends ThrowableMessageTranslator<T>> I includeCause(final boolean include)
+    public <I extends ThrowableMessageTranslator<T>> I includeCause()
     {
-        setIncludeCause(include);
+        setIncludeCause(true);
+        return (I)this;
+    }
+
+
+    /**
+     * Causes the translator to exclude cause {@link Throwable} messages, if any cause is present on the {@link
+     * Throwable} under translation.
+     *
+     * @param <I> The specific type of the translator.
+     *
+     * @return This translator, for call-chaining purposes.
+     */
+    @SuppressWarnings("unchecked")
+    public <I extends ThrowableMessageTranslator<T>> I excludeCause()
+    {
+        setIncludeCause(false);
         return (I)this;
     }
 
@@ -78,8 +123,15 @@ public class ThrowableMessageTranslator<T extends Throwable> extends AbstractTra
     }
 
 
+    /**
+     * Translates a single {@link Throwable}.  Subclasses may override this method to customize message output.
+     *
+     * @param throwable The throwable to be translated.  Will never be null.
+     *
+     * @return The string form of the throwable parameter.
+     */
     protected String translateSingle(final Throwable throwable)
     {
-        return String.format("%s(message=%s)", getTestingContext().getInstanceTracker().getObjectId(throwable), throwable.getMessage());
+        return String.format("%s(message=%s)", getInstanceTracker().getObjectId(throwable), throwable.getMessage());
     }
 }

@@ -48,7 +48,7 @@ public abstract class AbstractTranslatorTest<T extends AbstractTranslator> exten
     protected abstract T createTranslator();
 
 
-    protected AbstractTranslator getTranslator()
+    protected T getTranslator()
     {
         return getTestingContextUser();
     }
