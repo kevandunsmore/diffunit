@@ -92,19 +92,6 @@ public abstract class AbstractTranslatorTest<T extends AbstractTranslator> exten
     }
 
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testTranslate() throws Exception
-    {
-        assertEquals("null", getTranslator().translate(null));
-
-        assertEquals("TRANSLATED: hello", getTranslator().translate("hello"));
-        assertEquals("TRANSLATED: " + getClass().toString(), getTranslator().translate(getClass()));
-
-        getTranslator().prependToOutput("<<< ");
-        getTranslator().appendToOutput(" >>>");
-
-        assertEquals("<<< TRANSLATED: hello >>>", getTranslator().translate("hello"));
-        assertEquals("<<< TRANSLATED: " + getClass().toString() + " >>>", getTranslator().translate(getClass()));
-    }
+    public abstract void testTranslate() throws Exception;
 }

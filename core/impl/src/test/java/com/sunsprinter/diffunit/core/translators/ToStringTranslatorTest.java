@@ -17,49 +17,37 @@
 package com.sunsprinter.diffunit.core.translators;
 
 
-import org.junit.Test;
-
 import static junit.framework.Assert.assertEquals;
 
 
 /**
- * Tests the functionality of the {@link com.sunsprinter.diffunit.core.translators.AbstractTranslator} class.
+ * Tests the functionality of the {@link ToStringTranslator} class.
  *
  * @author Kevan Dunsmore
  * @created 2013/01/26
  */
-public class UnitAbstractTranslatorTest extends AbstractTranslatorTest
+public class ToStringTranslatorTest extends AbstractTranslatorTest<ToStringTranslator>
 {
     @Override
-    protected AbstractTranslator createTranslator()
+    protected ToStringTranslator createTranslator()
     {
-        return new ConcreteTranslator();
+        return new ToStringTranslator();
     }
 
 
     @SuppressWarnings("unchecked")
-    @Test
+    @Override
     public void testTranslate() throws Exception
     {
         assertEquals("null", getTranslator().translate(null));
 
-        assertEquals("TRANSLATED: hello", getTranslator().translate("hello"));
-        assertEquals("TRANSLATED: " + getClass().toString(), getTranslator().translate(getClass()));
+        assertEquals("hello", getTranslator().translate("hello"));
+        assertEquals(getClass().toString(), getTranslator().translate(getClass()));
 
         getTranslator().prependToOutput("<<< ");
         getTranslator().appendToOutput(" >>>");
 
-        assertEquals("<<< TRANSLATED: hello >>>", getTranslator().translate("hello"));
-        assertEquals("<<< TRANSLATED: " + getClass().toString() + " >>>", getTranslator().translate(getClass()));
-    }
-
-
-    protected final class ConcreteTranslator extends AbstractTranslator
-    {
-        @Override
-        protected String doTranslate(Object object) throws TranslationException
-        {
-            return "TRANSLATED: " + object.toString();
-        }
+        assertEquals("<<< hello >>>", getTranslator().translate("hello"));
+        assertEquals("<<< " + getClass().toString() + " >>>", getTranslator().translate(getClass()));
     }
 }

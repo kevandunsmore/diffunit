@@ -18,7 +18,10 @@ package com.sunsprinter.diffunit.core.translators;
 
 
 /**
- * ToStringTranslator
+ * The most basic translator.  Converts objects to strings by calling {@link Object#toString()} on each one.  Works well
+ * if you have sensible, repeatable string output from the target object.  You must resist the temptation to implement
+ * the {@link #toString()} on your class simply to make the tests, and this translator, work.  Instead implement a
+ * custom translator and limit your conversion to the testing space.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/10
