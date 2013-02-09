@@ -14,29 +14,30 @@
  *    limitations under the License.
  */
 
-package com.sunsprinter.diffunit.core.common;
+package com.sunsprinter.diffunit.core.translators;
 
 
 /**
- * Tests the functionality of the {@link com.sunsprinter.diffunit.core.common.AbstractTestingContextUser} class.
+ * Tests the functionality of the {@link com.sunsprinter.diffunit.core.translators.AbstractTranslator} class.
  *
  * @author Kevan Dunsmore
- * @created 2013/01/05
+ * @created 2013/01/26
  */
-public class UnitAbstractTestingContextUserTest extends AbstractTestingContextUserTest<UnitAbstractTestingContextUserTest.ConcreteTestingContextUser>
+public class UnitAbstractTranslatorTest extends AbstractTranslatorTest
 {
     @Override
-    protected ConcreteTestingContextUser createTestingContextUser()
+    protected AbstractTranslator createTranslator()
     {
-        return new ConcreteTestingContextUser();
+        return new ConcreteTranslator();
     }
 
 
-    /**
-     * Forms a concrete subclass to allow us to instantiate.
-     */
-    protected final class ConcreteTestingContextUser extends AbstractTestingContextUser
+    protected final class ConcreteTranslator extends AbstractTranslator
     {
-        // Concrete subclass to allow us to instantiate.
+        @Override
+        protected String doTranslate(Object object) throws TranslationException
+        {
+            return "TRANSLATED: " + object.toString();
+        }
     }
 }

@@ -27,13 +27,16 @@ import com.sunsprinter.diffunit.core.context.ITestingContext;
 
 
 /**
- * OutputManager
+ * Implementation of {@link com.sunsprinter.diffunit.core.output.IOutputManager} contract.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/13
  */
 public class OutputManager implements IOutputManager
 {
+    /**
+     * The testing context used by this output manager.
+     */
     private ITestingContext _testingContext;
 
 
@@ -71,29 +74,22 @@ public class OutputManager implements IOutputManager
 
 
     @Override
-    public void writeFile(final String fileName) throws RuntimeException
+    public void writeFile(final String fileName) throws DiffUnitOutputManagerRuntimeException
     {
         final File outputFile = new File(getTestingContext().getOutputDirectory(), fileName);
-        final PrintWriter writer;
-        try
-        {
-            writer = new PrintWriter(outputFile);
-        }
-        catch (final FileNotFoundException e)
-        {
-            throw new RuntimeException("Unable to write file " + fileName + ".  Cannot create PrintWriter.", e);
-        }
-        try
+        try (final PrintWriter writer = new PrintWriter(outputFile))
         {
             for (final Object object : getTestingContext().getOutputObjects())
             {
                 writer.println(getTestingContext().getRootTranslator().translate(object));
             }
         }
+        catch (final FileNotFoundException e)
+        {
+            throw new DiffUnitOutputManagerRuntimeException("Unable to write file " + fileName + ".  Cannot create PrintWriter.", e);
+        }
         finally
         {
-            IOUtils.closeQuietly(writer);
-
             // Clear the output objects collection in preparation for the next file, if any.
             getTestingContext().getOutputObjects().clear();
         }

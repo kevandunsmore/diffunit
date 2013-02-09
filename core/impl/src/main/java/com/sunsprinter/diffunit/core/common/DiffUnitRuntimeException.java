@@ -18,25 +18,15 @@ package com.sunsprinter.diffunit.core.common;
 
 
 /**
- * Tests the functionality of the {@link com.sunsprinter.diffunit.core.common.AbstractTestingContextUser} class.
+ * Exception used by DiffUnit.
  *
  * @author Kevan Dunsmore
- * @created 2013/01/05
+ * @created 2013/01/26
  */
-public class UnitAbstractTestingContextUserTest extends AbstractTestingContextUserTest<UnitAbstractTestingContextUserTest.ConcreteTestingContextUser>
+public abstract class DiffUnitRuntimeException extends RuntimeException
 {
-    @Override
-    protected ConcreteTestingContextUser createTestingContextUser()
+    public DiffUnitRuntimeException(final String message, final Throwable cause)
     {
-        return new ConcreteTestingContextUser();
-    }
-
-
-    /**
-     * Forms a concrete subclass to allow us to instantiate.
-     */
-    protected final class ConcreteTestingContextUser extends AbstractTestingContextUser
-    {
-        // Concrete subclass to allow us to instantiate.
+        super(message, cause);
     }
 }

@@ -14,29 +14,22 @@
  *    limitations under the License.
  */
 
-package com.sunsprinter.diffunit.core.common;
+package com.sunsprinter.diffunit.core.output;
+
+
+import com.sunsprinter.diffunit.core.common.DiffUnitRuntimeException;
 
 
 /**
- * Tests the functionality of the {@link com.sunsprinter.diffunit.core.common.AbstractTestingContextUser} class.
+ * Exception thrown by the output manager when there's a problem.
  *
  * @author Kevan Dunsmore
- * @created 2013/01/05
+ * @created 2013/01/26
  */
-public class UnitAbstractTestingContextUserTest extends AbstractTestingContextUserTest<UnitAbstractTestingContextUserTest.ConcreteTestingContextUser>
+public class DiffUnitOutputManagerRuntimeException extends DiffUnitRuntimeException
 {
-    @Override
-    protected ConcreteTestingContextUser createTestingContextUser()
+    public DiffUnitOutputManagerRuntimeException(final String message, final Throwable cause)
     {
-        return new ConcreteTestingContextUser();
-    }
-
-
-    /**
-     * Forms a concrete subclass to allow us to instantiate.
-     */
-    protected final class ConcreteTestingContextUser extends AbstractTestingContextUser
-    {
-        // Concrete subclass to allow us to instantiate.
+        super(message, cause);
     }
 }
