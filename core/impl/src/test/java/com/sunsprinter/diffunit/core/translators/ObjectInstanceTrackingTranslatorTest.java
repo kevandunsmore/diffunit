@@ -17,7 +17,11 @@
 package com.sunsprinter.diffunit.core.translators;
 
 
-import static org.junit.Assert.fail;
+import com.sunsprinter.diffunit.core.instancetracking.IObjectIdentifier;
+import com.sunsprinter.diffunit.core.instancetracking.IObjectInstanceTracker;
+import com.sunsprinter.diffunit.core.instancetracking.ObjectIdentifier;
+
+import static junit.framework.Assert.assertEquals;
 
 
 /**
@@ -39,6 +43,41 @@ public class ObjectInstanceTrackingTranslatorTest extends AbstractDelegatingTran
     @Override
     public void testTranslate() throws Exception
     {
-        fail("broken");
+        getTranslator().setInstanceTracker(new IObjectInstanceTracker()
+        {
+            private int _instanceCounter;
+
+            @Override
+            public void reset()
+            {
+                // Do nothing.
+            }
+
+
+            @Override
+            public IObjectIdentifier getObjectId(final Object object)
+            {
+                return new ObjectIdentifier(object, _instanceCounter++);
+            }
+        });
+        getTranslator().setDelegateTranslator(new ITranslator<Object>()
+        {
+            @Override
+            public String translate(final Object object) throws TranslationException
+            {
+                return "TRANSLATED: " + object.toString();
+            }
+        });
+
+        assertEquals("null", getTranslator().translate(null));
+
+        assertEquals("TRANSLATED: java.lang.String#0", getTranslator().translate("hello"));
+        assertEquals("TRANSLATED: java.lang.Class#1", getTranslator().translate(getClass()));
+
+        getTranslator().prependToOutput("<<< ");
+        getTranslator().appendToOutput(" >>>");
+
+        assertEquals("<<< TRANSLATED: java.lang.String#2 >>>", getTranslator().translate("hello"));
+        assertEquals("<<< TRANSLATED: java.lang.Class#3 >>>", getTranslator().translate(getClass()));
     }
 }
