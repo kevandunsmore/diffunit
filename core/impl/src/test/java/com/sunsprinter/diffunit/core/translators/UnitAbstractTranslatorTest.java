@@ -28,10 +28,10 @@ import static junit.framework.Assert.assertEquals;
  * @author Kevan Dunsmore
  * @created 2013/01/26
  */
-public class UnitAbstractTranslatorTest extends AbstractTranslatorTest
+public class UnitAbstractTranslatorTest extends AbstractTranslatorTest<UnitAbstractTranslatorTest.ConcreteTranslator>
 {
     @Override
-    protected AbstractTranslator createTranslator()
+    protected ConcreteTranslator createTranslator()
     {
         return new ConcreteTranslator();
     }
@@ -54,7 +54,7 @@ public class UnitAbstractTranslatorTest extends AbstractTranslatorTest
     }
 
 
-    protected final class ConcreteTranslator extends AbstractTranslator
+    protected static final class ConcreteTranslator extends AbstractTranslator
     {
         @Override
         protected String doTranslate(Object object) throws TranslationException

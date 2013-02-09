@@ -27,7 +27,7 @@ import com.sunsprinter.diffunit.core.instancetracking.IObjectIdentifier;
  * part of the translation work.<p/>
  *
  * If a delegate translator is not specified using the {@link #use(ITranslator)} method then this class will return
- * the root translator, as obtained from the testing context supplied by {@link TestingContextHolder}.
+ * the root translator, as obtained from the testing context supplied by {@link #getTestingContext}.
  *
  * @author Kevan Dunsmore
  * @created 2011/11/12
