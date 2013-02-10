@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Kevan Dunsmore.  All rights reserved.
+ * Copyright 2011-2013 Kevan Dunsmore.  All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,19 +43,22 @@ import org.apache.commons.lang3.StringUtils;
  */
 public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelegatingTranslator<T>
 {
-    private Collection<String> _propertiesToTranslate = new LinkedHashSet<String>();
-    private final Set<String> _propertiesToSkip = new HashSet<String>(Arrays.asList("class"));
+    private Collection<String> _propertiesToTranslate = new LinkedHashSet<>();
+    private Set<String> _propertiesToSkip = new HashSet<>(Arrays.asList("class"));
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public <I extends AbstractPropertyDrivenTranslator<T>> I translateProperties(final String... propertiesToTranslate)
     {
-        if (getPropertiesToTranslate() == null)
+        if (propertiesToTranslate != null)
         {
-            setPropertiesToTranslate(new LinkedList<String>());
-        }
+            if (getPropertiesToTranslate() == null)
+            {
+                setPropertiesToTranslate(new LinkedList<String>());
+            }
 
-        getPropertiesToTranslate().addAll(Arrays.asList(propertiesToTranslate));
+            getPropertiesToTranslate().addAll(Arrays.asList(propertiesToTranslate));
+        }
 
         return (I)this;
     }
@@ -64,8 +67,10 @@ public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelega
     @SuppressWarnings("unchecked")
     public <I extends AbstractPropertyDrivenTranslator<T>> I skipProperties(final String... propertiesToSkip)
     {
-        getPropertiesToSkip().addAll(Arrays.asList(propertiesToSkip));
-
+        if (propertiesToSkip != null)
+        {
+            getPropertiesToSkip().addAll(Arrays.asList(propertiesToSkip));
+        }
         return (I)this;
     }
 
@@ -88,6 +93,12 @@ public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelega
     }
 
 
+    protected void setPropertiesToSkip(Set<String> propertiesToSkip)
+    {
+        _propertiesToSkip = propertiesToSkip;
+    }
+
+
     protected Collection<PropertyDescriptor> determinePropertiesEligibleForTranslation(final T object) throws TranslationException
     {
         // We don't have a map of property names to properties.  We create one now.  We use a linked hash map to
@@ -103,7 +114,7 @@ public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelega
         }
         else
         {
-            properties = new LinkedList<PropertyDescriptor>();
+            properties = new LinkedList<>();
 
             // The client has specified the properties we have to translate.
             for (final String propertyName : getPropertiesToTranslate())
@@ -114,7 +125,7 @@ public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelega
                     // Oops.  The client specified a property that doesn't exist.
                     throw new TranslationException(object,
                                                    String.format("Property '%s' does not exist on object '%s'.  " +
-                                                                 "Available properties are '%s'.",
+                                                                         "Available properties are '%s'.",
                                                                  propertyName,
                                                                  getInstanceTracker().getObjectId(object),
                                                                  StringUtils.join(allPropertiesMap.keySet(),
@@ -154,7 +165,6 @@ public abstract class AbstractPropertyDrivenTranslator<T> extends AbstractDelega
             {
                 allPropertiesMap.put(propertyDescriptor.getName(), propertyDescriptor);
             }
-
         }
 
         return allPropertiesMap;
